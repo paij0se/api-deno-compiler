@@ -10,7 +10,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/acarl005/stripansi"
+	noansi "github.com/ELPanaJose/api-deno-compiler/src/routes/others"
 	"github.com/zhexuany/wordGenerator"
 )
 
@@ -59,7 +59,7 @@ func PostCode(w http.ResponseWriter, r *http.Request) {
 		}
 		// capture the stderr and stdout
 		executedOut := stdout.String() + stderr.String()
-		noAnsii := stripansi.Strip(executedOut)
+		noAnsii := noansi.NoAnsi(executedOut)
 		coolOut := strings.ReplaceAll(noAnsii, "sh: 2: kill: No such process", "")
 		// fmt.Println(coolOut)
 		// delete the archive
