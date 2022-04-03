@@ -5,14 +5,29 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	noansi "github.com/ELPanaJose/api-deno-compiler/src/routes/others"
-	"github.com/zhexuany/wordGenerator"
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func RandStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
+}
 
 func PostCode(w http.ResponseWriter, r *http.Request) {
 	var inputCode code
@@ -32,9 +47,8 @@ func PostCode(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("input:", input)
 
 		// create the program
-		program := wordGenerator.GetWord(12) + ".ts"
-		noBackQuote := strings.ReplaceAll(program, "`", "p")
-		f, err := os.Create(noBackQuote)
+		program := RandStringRunes(10) + ".ts"
+		f, err := os.Create(program)
 		if err != nil {
 			fmt.Println("some error creating the archive", err)
 		}
@@ -50,7 +64,7 @@ func PostCode(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("archive edited")
 		var stdout, stderr bytes.Buffer
 		cmd := exec.Command("sh", "-c", `
-	./deno run --allow-net --no-check `+noBackQuote+`&`+` sleep 1;kill $! 2>&1`)
+	./deno run --allow-net --no-check `+program+`&`+` sleep 1;kill $! 2>&1`)
 		cmd.Stdout = &stdout
 		cmd.Stderr = &stderr
 		peo := cmd.Run()
@@ -63,7 +77,7 @@ func PostCode(w http.ResponseWriter, r *http.Request) {
 		coolOut := strings.ReplaceAll(noAnsii, "sh: 2: kill: No such process", "")
 		// fmt.Println(coolOut)
 		// delete the archive
-		err = os.Remove(noBackQuote)
+		err = os.Remove(program)
 		if err != nil {
 			fmt.Println(err)
 		}

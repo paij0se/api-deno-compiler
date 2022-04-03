@@ -1,4 +1,5 @@
-go.sum
 test
 .vscode
 test
+./src/deno
+*.ts
