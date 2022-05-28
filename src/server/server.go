@@ -2,22 +2,28 @@ package server
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 
 	"github.com/ELPanaJose/api-deno-compiler/src/routes"
-	"github.com/gorilla/mux"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	HerokuEchoIpDashboard "github.com/paij0se/heroku-echo-ip-dashboard/src"
 )
 
 func StartServer() {
-	r := mux.NewRouter().StrictSlash(true)
-	r.HandleFunc("/", routes.IndexRoute)
-	r.HandleFunc("/code", routes.GetCode).Methods("GET")
-	r.HandleFunc("/code", routes.PostCode).Methods("POST")
+	e := echo.New()
+	HerokuEchoIpDashboard.HerokuEchoIpDashboard(e) // init the dashboard
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
+	e.Static("/", "src/public")
+	e.GET("/code", routes.GetCode)
+	e.POST("/code", routes.PostCode)
 	port, ok := os.LookupEnv("PORT")
 	if !ok {
 		port = "5000"
 	}
 	fmt.Printf("Api on port: %s", port)
-	http.ListenAndServe(":"+port, r)
+	e.Logger.Fatal(e.Start(":" + port))
 }

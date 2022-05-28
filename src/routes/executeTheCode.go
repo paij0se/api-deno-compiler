@@ -13,6 +13,8 @@ import (
 	"time"
 
 	noansi "github.com/ELPanaJose/api-deno-compiler/src/routes/others"
+	"github.com/labstack/echo/v4"
+	re "github.com/paij0se/heroku-echo-ip-dashboard/src/controllers"
 )
 
 func init() {
@@ -29,11 +31,13 @@ func RandStringRunes(n int) string {
 	return string(b)
 }
 
-func PostCode(w http.ResponseWriter, r *http.Request) {
+func PostCode(e echo.Context) error {
+	re.Requester(e.Scheme() + "://" + e.Request().Host)
+
 	var inputCode code
-	reqBody, err := ioutil.ReadAll(r.Body)
+	reqBody, err := ioutil.ReadAll(e.Request().Body)
 	if err != nil {
-		fmt.Fprintf(w, "Error")
+		return e.JSON(http.StatusInternalServerError, err)
 	}
 
 	json.Unmarshal([]byte(reqBody), &inputCode)
@@ -41,7 +45,7 @@ func PostCode(w http.ResponseWriter, r *http.Request) {
 	input := inputCode.Code
 	// check if the request is empty
 	if input == "" {
-		json.NewEncoder(w).Encode("Error,empty input")
+		return e.JSON(http.StatusBadRequest, "The request is empty")
 	} else {
 
 		fmt.Println("input:", input)
@@ -83,8 +87,6 @@ func PostCode(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Println("archive deleted")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(coolOut) // Send the reponse
+		return e.JSON(http.StatusOK, coolOut)
 	}
 }

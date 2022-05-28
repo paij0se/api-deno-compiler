@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Api Deno Compiler</title>
+    <style>
+      body {
+        background-color: dimgray;
+      }
+      h1,
+      p {
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      this a simple api that execute your deno code and send you the output, has
+      not limit per request
+    </h1>
+
+    <p>example request:</p>
+    <p>in deno:</p>
+    <pre><code class="lang-ts">const rawResponse = await fetch(
+  <span class="hljs-string">"https://api-deno-compiler.herokuapp.com/code"</span>,
+  {
+    method: <span class="hljs-string">"<span class="hljs-keyword">POST</span>"</span>,
+    headers: {
+      Accept: <span class="hljs-string">"application/json"</span>,
+      <span class="hljs-string">"Content-Type"</span>: <span class="hljs-string">"application/json"</span>,
+    },
+    body: JSON.stringify({
+      code: `console.log(await fetch(<span class="hljs-string">"https://api-deno-compiler.herokuapp.com/code"</span>))`,
+    }),
+  }
+);
+const content = await rawResponse.json();
+console.log(content);
+</code></pre>
+    <p>other example with deno, with more requests:</p>
+    <pre><code class="lang-ts">const <span class="hljs-keyword">code</span> = [
+  `console.log(<span class="hljs-string">"hello world"</span>)`,
+  `console.log(Deno.version)`,
+  `console.log(<span class="hljs-string">"🍱 🦕"</span>)`,
+  `for(<span class="hljs-keyword">let</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">10</span>;i++){console.log(<span class="hljs-string">"number:"</span>,i)}`,
+  `this would have an error`,
+];
+
+for (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) {
+  const rawResponse = await fetch(
+    <span class="hljs-string">"https://api-deno-compiler.herokuapp.com/code"</span>,
+    {
+      method: <span class="hljs-string">"POST"</span>,
+      headers: {
+        Accept: <span class="hljs-string">"application/json"</span>,
+        <span class="hljs-string">"Content-Type"</span>: <span class="hljs-string">"application/json"</span>,
+      },
+      body: JSON.stringify({
+        <span class="hljs-keyword">code</span>: `${<span class="hljs-keyword">code</span>[Math.floor(Math.random() * <span class="hljs-keyword">code</span>.length)]}`,
+      }),
+    },
+  );
+  const content = await rawResponse.json();
+  console.log(content);
+}
+</code></pre>
+    <p>in python:</p>
+    <pre><code class="lang-py"><span class="hljs-keyword">import</span> requests
+
+code = <span class="hljs-string">"""
+console.log(Deno.memoryUsage()
+"""</span>
+
+r = requests.post(<span class="hljs-string">"https://api-deno-compiler.herokuapp.com/code"</span>,
+                  json={<span class="hljs-string">"code"</span>: code})
+print(r.text)
+</code></pre>
+    <p>in go:</p>
+    <pre><code class="lang-go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+    <span class="hljs-string">"bytes"</span>
+    <span class="hljs-string">"encoding/json"</span>
+    <span class="hljs-string">"fmt"</span>
+    <span class="hljs-string">"io/ioutil"</span>
+    <span class="hljs-string">"log"</span>
+    <span class="hljs-string">"net/http"</span>
+    <span class="hljs-string">"time"</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+    start := time.Now()
+    postBody, _ := json.Marshal(<span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span>{
+        <span class="hljs-string">"code"</span>: <span class="hljs-string">"console.log(Deno.version)"</span>,
+    })
+    responseBody := bytes.NewBuffer(postBody)
+    resp, err := http.Post(<span class="hljs-string">"https://api-deno-compiler.herokuapp.com/code"</span>, <span class="hljs-string">"application/json"</span>, responseBody)
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+        log.Fatalf(<span class="hljs-string">"An Error Occured %v"</span>, err)
+    }
+    <span class="hljs-keyword">defer</span> resp.Body.Close()
+    body, err := ioutil.ReadAll(resp.Body)
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+        log.Fatalln(err)
+    }
+    sb := <span class="hljs-keyword">string</span>(body)
+    fmt.Printf(sb)
+    duration := time.Since(start)
+
+    fmt.Printf(<span class="hljs-string">"API Response Time: %d%s\n"</span>, duration.Milliseconds(), <span class="hljs-string">"ms"</span>)
+}
+</code></pre>
+    <h1>Used in:</h1>
+
+    <ul>
+      <li>
+        <p>
+          Deno online compiler :
+          <a href="https://deno-online-compiler.herokuapp.com/"
+            >https://deno-online-compiler.herokuapp.com/</a
+          >
+        </p>
+      </li>
+      <li>
+        <p>
+          dino-bot :
+          <a href="https://github.com/ELPanaJose/dino-bot"
+            >https://github.com/ELPanaJose/dino-bot</a
+          >
+        </p>
+      </li>
+    </ul>
+  </body>
+</html>

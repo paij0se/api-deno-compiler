@@ -1,0 +1,14 @@
+@import url("https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/cascadia-code.min.css");
+body {
+  background-color: #3f4549;
+}
+
+h1 {
+  color: #fff;
+  font-family: "Cascadia Code", sans-serif;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
