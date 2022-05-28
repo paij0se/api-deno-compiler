@@ -3,3 +3,5 @@ test
 test
 ./src/deno
 *.ts
+*.zip
+
