@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/acarl005/stripansi"
+	"github.com/drpaij0se/api-deno-compiler/src/others"
 	"github.com/gorilla/mux"
 	"github.com/zhexuany/wordGenerator"
 )
@@ -99,6 +100,8 @@ func indexRoute(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
+	// Download Deno
+	others.Download()
 	r := mux.NewRouter().StrictSlash(true)
 	r.HandleFunc("/", indexRoute)
 	r.HandleFunc("/code", getCode).Methods("GET")
@@ -106,7 +109,7 @@ func main() {
 
 	port, ok := os.LookupEnv("PORT")
 
-	if ok == false {
+	if !ok {
 		port = "5000"
 	}
 	fmt.Printf("Api on port: %s", port)
