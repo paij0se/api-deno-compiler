@@ -1,0 +1,6 @@
+github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d h1:licZJFw2RwpHMqeKTCYkitsPqHNxTmd4SNR5r94FGM8=
+github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d/go.mod h1:asat636LX7Bqt5lYEZ27JNDcqxfjdBQuJ/MM4CN/Lzo=
+github.com/gorilla/mux v1.8.0 h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI=
+github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
+github.com/zhexuany/wordGenerator v0.0.0-20161102120352-1f13e790d534 h1:Sg5L9VJM3elnf6JuaHMR9+ii0orQfxdnWFL/NutbAjs=
+github.com/zhexuany/wordGenerator v0.0.0-20161102120352-1f13e790d534/go.mod h1:oplLsl5isjq5d/8EaGgzN5Exkisk6Jr5qu2QbvRLtLM=
