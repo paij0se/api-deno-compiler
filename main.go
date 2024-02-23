@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/acarl005/stripansi"
-	"github.com/drpaij0se/api-deno-compiler/src/others"
+	"github.com/drpaij0se/api-deno-compiler/others"
 	"github.com/gorilla/mux"
 	"github.com/zhexuany/wordGenerator"
 )
@@ -95,7 +95,7 @@ func postCode(w http.ResponseWriter, r *http.Request) {
 }
 
 func indexRoute(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "make a http post request, more info in https://github.com/ELPanaJose/api-deno-compiler")
+	fmt.Fprintf(w, "make a http post request, more info in https://github.com/drpaij0se/api-deno-compiler")
 }
 
 func main() {

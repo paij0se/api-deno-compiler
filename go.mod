@@ -1,4 +1,4 @@
-// +heroku goVersion go1.20
+// +heroku goVersion go1.21
 module github.com/drpaij0se/api-deno-compiler
 
 go 1.21
