@@ -1,12 +1,14 @@
-<h1>this a simple api that execute your deno code and send you the output, has not limit per request</h1>
+# Deno Runner API
 
-example request:
+Welcome to the Deno Runner API! This API is designed to streamline the execution of your Deno code using the latest version and promptly deliver the output to you. With no limits per request, you have the flexibility to execute your code as needed without constraints.
 
-in deno:
+## Example Request
 
-```ts
+### Deno Example
+
+```typescript
 const rawResponse = await fetch(
-  "https://api-deno-compiler.herokuapp.com/code",
+  "https://ad-c-9c338a775c74.herokuapp.com/code",
   {
     method: "POST",
     headers: {
@@ -14,101 +16,14 @@ const rawResponse = await fetch(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      code: `console.log(await fetch("https://api-deno-compiler.herokuapp.com/code"))`,
+      code: `console.log(await fetch("https://google.com"))`,
     }),
   }
 );
 const content = await rawResponse.json();
 console.log(content);
-
 ```
 
-other example with deno, with more requests:
+# Endpoint: POST /code
 
-```ts
-const code = [
-  `console.log("hello world")`,
-  `console.log(Deno.version)`,
-  `console.log("🍱 🦕")`,
-  `for(let i=0;i<10;i++){console.log("number:",i)}`,
-  `this would have an error`,
-];
-
-for (let i = 0; i < 10; i++) {
-  const rawResponse = await fetch(
-    "https://api-deno-compiler.herokuapp.com/code",
-    {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        code: `${code[Math.floor(Math.random() * code.length)]}`,
-      }),
-    },
-  );
-  const content = await rawResponse.json();
-  console.log(content);
-}
-```
-
-in python:
-
-```py
-import requests
-
-code = """
-console.log(Deno.memoryUsage()
-"""
-
-r = requests.post("https://api-deno-compiler.herokuapp.com/code",
-                  json={"code": code})
-print(r.text)
-```
-
-in go:
-```go
-package main
-
-import (
-	"bytes"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"time"
-)
-
-func main() {
-	start := time.Now()
-	postBody, _ := json.Marshal(map[string]string{
-		"code": "console.log(Deno.version)",
-	})
-	responseBody := bytes.NewBuffer(postBody)
-	resp, err := http.Post("https://api-deno-compiler.herokuapp.com/code", "application/json", responseBody)
-	if err != nil {
-		log.Fatalf("An Error Occured %v", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	sb := string(body)
-	fmt.Printf(sb)
-	duration := time.Since(start)
-
-	fmt.Printf("API Response Time: %d%s\n", duration.Milliseconds(), "ms")
-}
-
-
-```
-<h1>Used in:</h1>
-
-- Deno online compiler : https://deno-online-compiler.herokuapp.com/
-
-- dino-bot : https://github.com/ELPanaJose/dino-bot
-# api-deno-compiler
-# api-deno-compiler
+Feel free to explore and integrate this API into your projects! If you have any questions or feedback, please don't hesitate to reach out.
