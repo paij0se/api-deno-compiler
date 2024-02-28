@@ -2,9 +2,11 @@ package main
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -12,25 +14,13 @@ import (
 
 	"github.com/acarl005/stripansi"
 	"github.com/drpaij0se/api-deno-compiler/others"
+	"github.com/drpaij0se/api-deno-compiler/others/database"
 	"github.com/gorilla/mux"
 	"github.com/zhexuany/wordGenerator"
 )
 
 type code struct {
 	Code string
-}
-
-type allCode []code
-
-var codes = allCode{
-	{
-		Code: "console.log(Deno.version) //example code",
-	},
-}
-
-func getCode(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(codes)
 }
 
 func postCode(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +37,13 @@ func postCode(w http.ResponseWriter, r *http.Request) {
 	if input == "" {
 		json.NewEncoder(w).Encode("Error,empty input")
 	} else {
-
+		// connect to the database
+		db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+		if err != nil {
+			log.Fatalf("Error opening database: %q", err)
+		}
+		// insert the code into the database
+		id := database.DbInsert(db, input)
 		fmt.Println("input:", input)
 
 		// create the program
@@ -90,8 +86,25 @@ func postCode(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("archive deleted")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(coolOut) // Send the reponse
+		// send the id and the output
+		json.NewEncoder(w).Encode(map[string]string{"id": id, "output": coolOut})
 	}
+}
+
+func GetCode(w http.ResponseWriter, r *http.Request) {
+	// get the id from the request
+	vars := mux.Vars(r)
+	id := vars["id"]
+	// connect to the database
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatalf("Error opening database: %q", err)
+	}
+	// get the code from the database
+	code := database.DbGet(db, id)
+	// return the code
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(code)
 }
 
 func indexRoute(w http.ResponseWriter, r *http.Request) {
@@ -104,7 +117,7 @@ func main() {
 	others.Download()
 	r := mux.NewRouter().StrictSlash(true)
 	r.HandleFunc("/", indexRoute)
-	r.HandleFunc("/code", getCode).Methods("GET")
+	r.HandleFunc("/code/{id}", GetCode).Methods("GET")
 	r.HandleFunc("/code", postCode).Methods("POST")
 
 	port, ok := os.LookupEnv("PORT")

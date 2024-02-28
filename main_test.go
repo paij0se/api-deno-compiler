@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -17,7 +18,7 @@ func TestDownload(t *testing.T) {
 
 func TestAPI(t *testing.T) {
 	url := "http://localhost:5000/code"
-	payload := []byte(`{"code": "console.log(await fetch(\"https://ip-api.com/\"))"}`)
+	payload := []byte(`{"code": "console.log('Hello, World!')"}`)
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(payload))
 	if err != nil {
@@ -49,5 +50,25 @@ func TestAPI(t *testing.T) {
 		t.Fatalf("Error reading response: %v", err)
 	}
 
-	fmt.Println("Response:", string(body))
+	// print the response as json
+	jsonResp, err := json.MarshalIndent(body, "", "  ")
+	if err != nil {
+		t.Fatalf("Error marshalling response: %v", err)
+	}
+	fmt.Println(string(jsonResp))
 }
+
+/*
+const rawResponse = await fetch(
+  "http://localhost:5000/code/tkwryp",
+  {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  }
+);
+const content = await rawResponse.json();
+console.log(content);
+*/
