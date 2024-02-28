@@ -4,7 +4,11 @@ Welcome to the Deno Runner API! This API is designed to streamline the execution
 
 ## Example Request
 
-### Deno Example
+### Endpoints
+
+example with Deno
+
+# Endpoint: POST /code
 
 ```typescript
 const rawResponse = await fetch(
@@ -24,6 +28,21 @@ const content = await rawResponse.json();
 console.log(content);
 ```
 
-# Endpoint: POST /code
+# Endpoint: GET /code{ID}
 
-Feel free to explore and integrate this API into your projects! If you have any questions or feedback, please don't hesitate to reach out.
+example:
+
+```typescript
+const rawResponse = await fetch(
+  "https://ad-c-9c338a775c74.herokuapp.com/code/tkwryp",
+  {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  }
+);
+const content = await rawResponse.json();
+console.log(content);
+```
