@@ -52,9 +52,13 @@ func DbGet(client *mongo.Client, id string) string {
 func ConnectToDB() *mongo.Client {
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	opts := options.Client().ApplyURI(os.Getenv("DATABASE_URL")).SetServerAPIOptions(serverAPI)
+	if os.Getenv("DATABASE_URL") == "" {
+		log.Fatal("DATABASE_URL is not set")
+	}
 	client, err := mongo.Connect(context.Background(), opts)
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("Connected to database!!!")
 	return client
 }
