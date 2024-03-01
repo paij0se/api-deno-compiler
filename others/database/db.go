@@ -1,12 +1,15 @@
 package database
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 
-	_ "github.com/lib/pq"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const alphanumericChars = "abcdefghijklmnopqrstuvwxyz0123456789"
@@ -19,38 +22,39 @@ func generateRandomString(length int) string {
 	return string(result)
 }
 
-func DbInsert(db *sql.DB, code string) string {
-	// Create the database table codes with the following schema (id will be 6 characters long and alphanumeric):
-	// code string, id string
-	_, err := db.Exec("CREATE TABLE IF NOT EXISTS codes (id VARCHAR(6) PRIMARY KEY, code TEXT)")
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Table created successfully.")
-	// insert the code into the database
-	id := generateRandomString(6)
-	_, err = db.Exec("INSERT INTO codes (id, code) VALUES ($1, $2)", id, code)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Code inserted successfully With ID: ", id)
-	// close the connection
-	defer db.Close()
-	// return the id
-	return id
+func DbInsert(client *mongo.Client, code string) string {
+	collection := client.Database("adc").Collection("codes")
 
+	id := generateRandomString(6)
+	_, err := collection.InsertOne(context.Background(), bson.M{"_id": id, "code": code})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Code inserted successfully With ID:", id)
+
+	return id
 }
 
-func DbGet(db *sql.DB, id string) string {
-	// get the code from the database
-	var code string
-	err := db.QueryRow("SELECT code FROM codes WHERE id = $1", id).Scan(&code)
+func DbGet(client *mongo.Client, id string) string {
+	collection := client.Database("adc").Collection("codes")
+
+	var result bson.M
+	err := collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&result)
 	if err != nil {
 		return "Code Ain't Found"
 	}
 	fmt.Println("Code retrieved successfully")
-	// close the connection
-	defer db.Close()
-	// return the code
+
+	code := result["code"].(string)
 	return code
+}
+
+func ConnectToDB() *mongo.Client {
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	opts := options.Client().ApplyURI(os.Getenv("DATABASE_URL")).SetServerAPIOptions(serverAPI)
+	client, err := mongo.Connect(context.Background(), opts)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return client
 }
