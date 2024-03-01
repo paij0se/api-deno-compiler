@@ -14,6 +14,7 @@ import (
 	"github.com/drpaij0se/api-deno-compiler/others"
 	"github.com/drpaij0se/api-deno-compiler/others/database"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"github.com/zhexuany/wordGenerator"
 )
 
@@ -105,5 +106,6 @@ func main() {
 		port = "5000"
 	}
 	fmt.Printf("Api on port: %s", port)
-	http.ListenAndServe(":"+port, r)
+	handler := cors.Default().Handler(r)
+	http.ListenAndServe(":"+port, handler)
 }
