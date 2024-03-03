@@ -1,6 +1,6 @@
 # API Deno Compiler
 
-Welcome to the Deno Runner API! This API is designed to streamline the execution of your Deno code using the latest version and promptly deliver the output to you. With no limits per request, you have the flexibility to execute your code as needed without constraints.
+Welcome to the API Deno Compiler! This API is designed to streamline the execution of your Deno code using the latest version and promptly deliver the output to you. With no limits per request, you have the flexibility to execute your code as needed without constraints.
 
 ## Example Request
 
