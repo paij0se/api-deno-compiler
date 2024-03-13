@@ -16,7 +16,7 @@ func TestDownload(t *testing.T) {
 	others.Download()
 }
 
-func TestAPI(t *testing.T) {
+func TestPostRequest(t *testing.T) {
 	url := "http://localhost:5000/code"
 	payload := []byte(`{"code": "console.log('Hello, World!')"}`)
 
@@ -35,8 +35,6 @@ func TestAPI(t *testing.T) {
 	})
 	server := httptest.NewServer(handler)
 	defer server.Close()
-
-	// Replace URL with the mock server's URL
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -58,17 +56,17 @@ func TestAPI(t *testing.T) {
 	fmt.Println(string(jsonResp))
 }
 
-/*
-const rawResponse = await fetch(
-  "http://localhost:5000/code/tkwryp",
-  {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-  }
-);
-const content = await rawResponse.json();
-console.log(content);
-*/
+func TestGetRequest(t *testing.T) {
+	resp, err := http.Get("http://localhost:5000/code/tkwryp")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error reading response body:", err)
+		return
+	}
+	fmt.Println(string(body))
+}
