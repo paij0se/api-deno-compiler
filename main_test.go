@@ -9,7 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/drpaij0se/api-deno-compiler/others"
+	"github.com/paij0se/api-deno-compiler/others"
 )
 
 func TestDownload(t *testing.T) {

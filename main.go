@@ -11,8 +11,8 @@ import (
 	"strings"
 
 	"github.com/acarl005/stripansi"
-	"github.com/drpaij0se/api-deno-compiler/others"
-	"github.com/drpaij0se/api-deno-compiler/others/database"
+	"github.com/paij0se/api-deno-compiler/others"
+	"github.com/paij0se/api-deno-compiler/others/database"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"github.com/zhexuany/wordGenerator"
@@ -90,7 +90,7 @@ func GetCode(w http.ResponseWriter, r *http.Request) {
 }
 
 func indexRoute(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "make a http post request, more info in https://github.com/drpaij0se/api-deno-compiler")
+	fmt.Fprintf(w, "make a http post request, more info in https://github.com/paij0se/api-deno-compiler")
 }
 
 func main() {
